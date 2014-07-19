@@ -3,41 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package us.jlitz.backuprestart;
-import java.util.*;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import static java.util.concurrent.TimeUnit.*;
+import java.util.concurrent.TimeUnit;
 
- 
 /**
  *
  * @author Russell
+ * @author Kevin Raoofi
  */
-public class Timer extends JFrame{
-  private final ScheduledExecutorService scheduler =
-     Executors.newScheduledThreadPool(1);
-  private Backup_Restart copy = new Backup_Restart();
-  
-    public Timer(){
-        
+public class Timer {
+
+    private final ScheduledExecutorService scheduler;
+
+    public Timer() {
+        this.scheduler = Executors.newScheduledThreadPool(1);
     }
-    
-    public void copyFile() {
-     final Runnable beeper = new Runnable() {
-       public void run() {
-           copy.main();
-       }
-     };
-     //10800
-     
-     final ScheduledFuture<?> beeperHandle =
-       scheduler.scheduleAtFixedRate(beeper, time, time, SECONDS);
-     
-    
-     
-}   
-    
+
+    public void submit(Runnable r, long duration, TimeUnit durationUnit) {
+        scheduler.scheduleAtFixedRate(
+                r,
+                duration, duration,
+                durationUnit);
+    }
 }

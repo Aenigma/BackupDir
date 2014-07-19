@@ -10,25 +10,39 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Backup_Restart extends JFrame {
+public class Backup implements Runnable {
 
-    public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH-mm-ss";
-    private static final DateTimeFormatter timeStampFormat = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter defaultTimeStampFormat = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ISO_LOCAL_DATE)
             .appendLiteral('T')
             .appendPattern("HHmmss")
             .appendLiteral('Z')
             .appendOffset("+HH", "+00")
             .toFormatter();
-    
-    private static final Logger LOG = Logger.getLogger(Backup_Restart.class
-            .getName());
 
-    public static void main(String... args) {
-        Path srcDir = Paths.get("C:/Users/kevin/arduino/");
-        Path destDir = Paths.get("C:/Users/kevin/", ZonedDateTime.now().format(
-                timeStampFormat));
+    private static final Logger LOG = Logger.getLogger(Backup.class.getName());
+    private static final Path workingDirectory = Paths.get(".").toAbsolutePath();
 
+    private Path srcDir;
+    private Path destDir;
+    private final DateTimeFormatter timeStampFormat;
+
+    public Backup() {
+        this(workingDirectory, workingDirectory, defaultTimeStampFormat);
+    }
+
+    public Backup(Path srcDir, Path destDir) {
+        this(srcDir, destDir, defaultTimeStampFormat);
+    }
+
+    public Backup(Path srcDir, Path destDir, DateTimeFormatter timeStampFormat) {
+        this.srcDir = srcDir;
+        this.destDir = destDir.resolve((ZonedDateTime.now().format(timeStampFormat)));
+        this.timeStampFormat = timeStampFormat;
+    }
+
+    @Override
+    public void run() {
         try {
             Files.createDirectories(destDir);
             Files.walk(srcDir).forEach((Path p) -> {
