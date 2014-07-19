@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backup_restart;
+package us.jlitz.backuprestart;
 
 import java.awt.event.KeyEvent;
 import java.io.File;

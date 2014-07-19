@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backup_restart;
+package us.jlitz.backuprestart;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
